@@ -35,7 +35,7 @@ which is included in the directory.
 
 ### Build and Compile the Proofs
 
-1. Enter either `main_version` or `variant` directory.
+1. Enter either `main_version/coq` or `variant/coq` directory.
 
 2. Type `make` in the terminal to build and compile the proofs.
 
