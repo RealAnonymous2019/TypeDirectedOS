@@ -124,162 +124,63 @@ Hint Resolve typing_regular_2.
 
 Require Import Omega.
 
-Ltac size_ind_auto :=
-  ( eapply_first_lt_hyp ;
-    try reflexivity;
-    try omega ;
-    try eauto ).
-
-Lemma typing_regular_1_aux : forall i,
-    ((forall e, (size_exp e = i -> forall G T, Etyping G e T -> lc_exp e)) /\
-    (forall v, (size_value v = i -> forall T, Vtyping v T -> lc_value v))).
-Proof.
-  intros i; pattern i; apply lt_wf_rec;
-    clear i; intros i H;
-      apply_mutual_ind exp_value_mutind;
-      default_simp;
-      try solve [
-            constructor; size_ind_auto
-          ].
-  - (* abs *)
-  pick fresh x.
-  apply (lc_e_abs_exists x).
-  eapply_first_lt_hyp;
-    try (apply size_exp_open_exp_wrt_exp_var);
-    try omega.
-  auto.
-  - (* fixpoint *)
-  pick fresh x.
-  apply (lc_e_fixpoint_exists x).
-  eapply_first_lt_hyp;
-    try apply size_exp_open_exp_wrt_exp_var;
-    try omega.
-  apply H6.
-  auto.
-  - (* absv *)
-  pick fresh x.
-  apply (lc_v_absv_exists x).
-  eapply_first_lt_hyp;
-    try apply size_exp_open_exp_wrt_exp_var;
-    try omega.
-  auto.
-Qed.
-
 Lemma typing_regular_1_exp :
-    forall e, forall G T, Etyping G e T -> lc_exp e.
-Proof.
-  intros e.
-  pose proof (typing_regular_1_aux (size_exp e)).
-  intuition eauto.
-Qed.
-
-Lemma typing_regular_1_val :
+  forall e, forall G T, Etyping G e T -> lc_exp e
+with typing_regular_1_val :
   forall v, forall T, Vtyping v T -> lc_value v.
 Proof.
-  intros v.
-  pose proof (typing_regular_1_aux (size_value v)).
-  intuition eauto.
+  intros e G T H.
+  induction H;
+    clear typing_regular_1_exp;
+    eauto.
+  intros v T H.
+  induction H;
+    clear typing_regular_1_val;
+    eauto.
 Qed.
 
 Hint Resolve typing_regular_1_exp typing_regular_1_val.
 
 (** Other properties *)
-Lemma fv_in_dom_aux : forall i,
-  (forall e, size_exp e = i ->
-      forall G T, Etyping G e T -> fv_exp e [<=] dom G) /\
-  (forall v, size_value v = i ->
-      forall T, Vtyping v T -> fv_value v [<=] empty).
+Lemma fv_in_dom:
+  forall e,
+  forall G T, Etyping G e T -> fv_exp e [<=] dom G
+with value_no_fv : forall v T,
+    Vtyping v T -> fv_value v [<=] empty.
 Proof.
-  intros i; pattern i; apply lt_wf_rec;
-    clear i; intros i H;
-      apply_mutual_ind exp_value_mutind;
-      default_simp;
-      try fsetdec. (*
+  intros e G T H.
+  induction H; simpl; try fsetdec.
   - Case "value".
-    forwards*: fv_in_dom_v H0.
-    fsetdec. *)
+    forwards*: value_no_fv H0.
+    fsetdec.
   - Case "typing_var".
-    apply binds_In in H4.
+    apply binds_In in H0.
     fsetdec.
   - Case "typing_abs".
     pick fresh x.
-    assert (Fx : fv_exp (e ^ x) [<=] dom ([(x,A)] ++ G)). {
-      assert ((x, A) :: G |= e ^ x ~: B0) by auto.
-      eapply_first_lt_hyp;
-      try apply size_exp_open_exp_wrt_exp_var;
-      try omega.
-      apply H1.
-    }
+    assert (Fx : fv_exp (e ^ x) [<=] dom ([(x,A)] ++ G))
+      by eauto.
+    simpl in Fx.
     assert (Fy : fv_exp e [<=] fv_exp (e ^ x)) by
         eapply fv_exp_open_exp_wrt_exp_lower.
-    simpl in Fx.
     fsetdec.
   - Case "typing_fix".
     pick fresh x.
-    assert (Fx : fv_exp (e ^ x) [<=] dom ([(x,T)] ++ G)). {
-      assert ((x, T) :: G |= e ^ x ~: T) by auto.
-      eapply_first_lt_hyp;
-      try apply size_exp_open_exp_wrt_exp_var;
-      try omega.
-      apply H1.
-    }
+    assert (Fx : fv_exp (e ^ x) [<=] dom ([(x,A)] ++ G))
+      by eauto.
+    simpl in Fx.
     assert (Fy : fv_exp e [<=] fv_exp (e ^ x)) by
         eapply fv_exp_open_exp_wrt_exp_lower.
-    simpl in Fx.
     fsetdec.
-  - Case "app".
-    assert (fv_exp e2 [<=] dom G) by size_ind_auto.
-    assert (fv_exp e1 [<=] dom G) by size_ind_auto.
-    fsetdec.
-  - Case "merge".
-    assert (fv_exp e2 [<=] dom G) by size_ind_auto.
-    assert (fv_exp e1 [<=] dom G) by size_ind_auto.
-    fsetdec.
-  - Case "anno".
-    size_ind_auto.
-  - Case "value".
-    assert (fv_value v [<=] empty) by size_ind_auto.
-    fsetdec.
-  - Case "topv".
-    eapply (H (size_value v)).
-    omega.
-    auto.
-    eauto.
-  - Case "absv".
-    pick fresh x.
-    assert (Fx : fv_exp (e ^ x) [<=] dom [(x,A)]). {
-      assert ([(x, A)] |= e ^ x ~: B0) by auto.
-      eapply_first_lt_hyp;
-      try apply size_exp_open_exp_wrt_exp_var;
-      try omega.
-      eauto.
-    }
-    assert (Fy : fv_exp e [<=] fv_exp (e ^ x)) by
-        eapply fv_exp_open_exp_wrt_exp_lower.
-    simpl in Fx.
-    fsetdec.
-  - Case "mergev".
-    assert (fv_value v2 [<=] empty) by size_ind_auto.
-    assert (fv_value v1 [<=] empty) by size_ind_auto.
-    fsetdec.
-Qed.
-
-
-Lemma fv_in_dom:
-  forall e,
-  forall G T, Etyping G e T -> fv_exp e [<=] dom G.
-Proof.
-  intro e.
-  pose proof (fv_in_dom_aux (size_exp e)).
-  intuition eauto.
-Qed.
-
-Lemma value_no_fv : forall v T,
-    Vtyping v T -> fv_value v [<=] empty.
-Proof.
-  intro v.
-  pose proof (fv_in_dom_aux (size_value v)).
-  intuition eauto.
+  - intros v T H.
+  induction H; simpl; try fsetdec.
+  pick fresh x.
+  assert (Fx : fv_exp (e ^ x) [<=] dom ([(x,A)] ++ []))
+    by eauto.
+  simpl in Fx.
+  assert (Fy : fv_exp e [<=] fv_exp (e ^ x)) by
+      eapply fv_exp_open_exp_wrt_exp_lower.
+  fsetdec.
 Qed.
 
 

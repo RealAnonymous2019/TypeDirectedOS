@@ -261,7 +261,7 @@ Semantics :: '' ::=
 defn
 v -> A  v'  :: :: TypedReduce :: TReduce_
 {{ tex [[v]]\,[[|->]]_{[[A]]}\,[[v']] }}
-{{ com Typed Reduce for value in Operational Semantics, no toparr? }}
+{{ com Typed Reduce for value in Operational Semantics }}
 by
 
 
