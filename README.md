@@ -3,7 +3,7 @@ A Type-Directed Operational Semantics for a Calculus with a Merge Operator
 
 ## Building Instructions
 
-Our Coq proofs are verified in **Coq 8.8.1**. We rely on two Coq libraries:
+Our Coq proofs are verified in **Coq 8.9.1**. We rely on two Coq libraries:
 [`metalib`](https://github.com/plclub/metalib) for the locally nameless
 representation in our proofs; and
 [`LibTactics.v`](http://gallium.inria.fr/~fpottier/ssphs/LibTactics.html),
@@ -13,11 +13,11 @@ which is included in the directory.
 
 ### Prerequisites
 
-1. Install Coq 8.8.1 or Coq 8.8.2. (Note Coq 8.9 is not compatiable with `Metalib`)
+1. Install Coq 8.9.1.
    The recommended way to install Coq is via `OPAM`. Refer to
    [here](https://coq.inria.fr/opam/www/using.html) for detailed steps. Or one could
    download the pre-built packages for Windows and MacOS via
-   [here](https://github.com/coq/coq/releases/tag/V8.8.2). Choose a suitable installer
+   [here](https://github.com/coq/coq/releases/tag/V8.9.1). Choose a suitable installer
    according to your platform.
 
 2. Make sure `Coq` is installed (type `coqc` in the terminal, if you see "command
@@ -25,7 +25,7 @@ which is included in the directory.
    1. Open terminal
    2. `git clone https://github.com/plclub/metalib`
    3. `cd metalib/Metalib`
-   4. Make sure the version is correct by `git checkout fca72de`
+   4. Make sure the version is correct by `git checkout e15d6a1`
    5. `make install`
 
 3. Note to compile the `variant`, it is necessary to replace `LibLNgen.v` in `Metalib` by the file in the same name provided in the directory.
