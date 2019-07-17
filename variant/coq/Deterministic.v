@@ -6,6 +6,7 @@ Require Import
         rules_inf
         Infrastructure
         Key_Properties.
+Require Import Coq.Strings.String.
 
 
 Lemma TypedReduce_unique: forall (v v1 v2 : value) (A: typ),

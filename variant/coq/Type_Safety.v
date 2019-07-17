@@ -11,6 +11,7 @@ Require Import
 
 Require Import List. Import ListNotations.
 Require Import Arith Omega.
+Require Import Coq.Strings.String.
 
 
 Lemma TypedReduce_trans : forall v v1 v2 A B,

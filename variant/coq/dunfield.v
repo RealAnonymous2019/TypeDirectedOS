@@ -9,6 +9,8 @@ Require Import
         Deterministic
         rules_inf2.
 
+Require Import Coq.Strings.String.
+
 Fixpoint erase_anno (e:exp) : dexp :=
   match e with
   | (e_var_b nat) => de_var_b nat

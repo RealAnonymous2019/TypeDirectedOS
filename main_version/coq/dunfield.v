@@ -1,5 +1,6 @@
 Require Import LibTactics.
 Require Import Metalib.Metatheory.
+Require Import Coq.Strings.String.
 
 Require Import
         syntax_ott

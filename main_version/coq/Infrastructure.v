@@ -4,6 +4,7 @@ Require Import syntax_ott
                rules_inf.
 
 Require Import List. Import ListNotations.
+Require Import Coq.Strings.String.
 
 
 Definition relation (X:Type) := X -> X -> Prop.

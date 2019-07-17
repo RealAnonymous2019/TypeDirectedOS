@@ -11,6 +11,7 @@ Require Import
 
 Require Import List. Import ListNotations.
 Require Import Arith Omega.
+Require Import Coq.Strings.String.
 
 
 Lemma TypedReduce_toparr_normal_typed : forall A B,

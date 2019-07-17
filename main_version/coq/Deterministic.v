@@ -7,6 +7,8 @@ Require Import
         Infrastructure
         Key_Properties.
 
+Require Import Coq.Strings.String.
+
 
 Lemma TypedReduce_unique: forall (v v1 v2 : exp) (A: typ),
     value v -> (exists B, Etyping nil v B) -> TypedReduce v A v1 -> TypedReduce v A v2 -> v1 = v2.
