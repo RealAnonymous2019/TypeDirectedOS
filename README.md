@@ -60,6 +60,9 @@ which is included in the directory.
 - `main_version` directory contains the definition and proofs of the main calculus
 - `variant` directory contains the definition and proofs of the simple variant (discussed in the Appendix). Its subtyping relation is
 known to be reflexive and transitive.
+- `bidirectional_lambdai` directory is almostly the main version. It extends the
+bidirectional type system of lambdai by a fixpoint rule, and has a different comleteness theorem in `icfp_bidirectional.v`.
+It is verified in **Coq 8.10.2**.
 - `syntax_ott.v` contains the locally nameless definitions of the calculi and Dunfield's calculus.
 - `rules_inf.v` and `rules_inf2.v` contains the `lngen` generated code.
 - `Infrastructure.v` contains the type systems of the calculi and some lemmas.
